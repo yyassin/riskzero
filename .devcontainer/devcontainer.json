@@ -1,0 +1,78 @@
+{
+    "name": "RiskZero",
+    "image": "riskzero-clean:latest",
+    // Build the Docker image on the host before the container starts (if not already present).
+    // Pass a CUDA version as the first argument to build for a different GPU generation:
+    //   e.g. change to "./docker/build.sh 13.2.0" for Blackwell
+    "initializeCommand": "./docker/build.sh",
+    "runArgs": [
+        "--init",
+        "--gpus=all"
+    ],
+    "remoteUser": "vscode",
+    // Mount persistent shell history so it survives container rebuilds
+    "mounts": [
+        "source=riskzero-zsh-history,target=/commandhistory,type=volume"
+    ],
+    "features": {
+        // Installs Oh My Zsh and configures zsh as the default shell
+        "ghcr.io/devcontainers/features/common-utils": {
+            "installZsh": true,
+            "installOhMyZsh": true,
+            "installOhMyZshConfig": true,
+            "configureZshAsDefaultShell": true,
+            "username": "vscode"
+        },
+        // Zsh autosuggestions + syntax highlighting plugins
+        "ghcr.io/devcontainers-extra/features/zsh-plugins:0": {
+            "plugins": "zsh-autosuggestions zsh-syntax-highlighting",
+            "omzPlugins": "https://github.com/zsh-users/zsh-autosuggestions.git https://github.com/zsh-users/zsh-syntax-highlighting.git"
+        }
+    },
+    "customizations": {
+        "vscode": {
+            "extensions": [
+                // Python tooling
+                "ms-python.python",
+                "ms-python.vscode-pylance",
+                "charliermarsh.ruff",
+                // Git
+                "mhutchie.git-graph",
+                "eamodio.gitlens",
+                // Docker / shell
+                "ms-azuretools.vscode-docker",
+                "timonwong.shellcheck",
+                // QoL
+                "github.vscode-github-actions",
+                "johnpapa.vscode-peacock",
+                // AI
+                "anthropic.claude-code"
+            ],
+            "settings": {
+                // Point Pylance at the uv-managed venv (created by `uv sync` in post-create)
+                "python.defaultInterpreterPath": "${workspaceFolder}/.venv/bin/python",
+                // Pylance type checking (ty is used separately via CLI)
+                "python.analysis.typeCheckingMode": "basic",
+                "python.analysis.autoImportCompletions": true,
+                "editor.formatOnSave": true,
+                "[python]": {
+                    "editor.defaultFormatter": "charliermarsh.ruff",
+                    "editor.codeActionsOnSave": {
+                        "source.organizeImports": "explicit"
+                    }
+                },
+                // Persist zsh history in the mounted volume
+                "terminal.integrated.env.linux": {
+                    "HISTFILE": "/commandhistory/.zsh_history"
+                }
+            }
+        }
+    },
+    // Runs once after the container is first created:
+    // - Clones Powerlevel10k and copies dotfiles
+    // - Installs ty as a global uv tool
+    // - Runs `uv sync` to install all project dependencies into .venv
+    "postCreateCommand": "bash .devcontainer/scripts/post-create.sh",
+    // Runs every time the container starts — confirms JAX can see the GPU
+    "postStartCommand": ".venv/bin/python3 .devcontainer/scripts/validate-cuda.py"
+}

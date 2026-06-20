@@ -1,0 +1,35 @@
+seeds: [159, 1606, 2186, 3462, 8175]
+seed: -1
+env_name: "space-invaders-risk"
+max_num_steps: 64
+max_num_iters: 2000
+eval_interval: 25
+eval_num_actors: 1024
+selfplay_batch_size: 32
+
+huber_param: 1.0
+buffer_batch_size: 1024
+buffer_size: 102_400 # 32 * 64 * 25 ; 100 sets of 128 steps each
+epsilon_start: 1.0
+epsilon_finish: 0.1
+epsilon_anneal_time: 1000
+learning_start: 50  # Iters of max_num_steps to prefill the buffer
+n_step: 5
+
+num_quantiles: 64
+alpha_cvar: 1.0 # CVaR level
+
+gamma: 1.0
+lr: 0.0001
+min_lr: 0.00001
+optim_eps: 0.00001
+lr_linear_decay: True
+lr_anneal_iterations: 2000
+max_grad_norm: 5.0
+target_tau: 1.0
+target_update_interval: 10
+train_epochs_per_iter: 20
+
+# Placeholders for dynamic values
+num_actions: -1
+is_state_vector: False

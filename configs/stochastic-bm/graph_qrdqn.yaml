@@ -1,0 +1,36 @@
+seeds: [159, 1606, 2186, 3462, 8175]
+seed: -1
+env_name: "stochastic-bipartite-matching"  # overridden at runtime via --dataset
+max_num_steps: 32
+max_num_iters: 2000
+eval_interval: 5
+eval_num_actors: 1024
+selfplay_batch_size: 32
+
+hidden_size: 64
+num_quantiles: 64
+alpha_cvar: 0.25
+huber_param: 1.0
+
+buffer_batch_size: 256
+buffer_size: 65_536 # 32 * 32 * 64
+
+epsilon_start: 1.0
+epsilon_finish: 0.1
+epsilon_anneal_time: 2_000
+learning_start: 64
+
+gamma: 1.0
+lr: 0.0001
+min_lr: 0.00001
+optim_eps: 0.00001
+lr_linear_decay: True
+lr_anneal_iterations: 2000
+max_grad_norm: 0.5
+target_tau: 1.0
+target_update_interval: 5
+train_epochs_per_iter: 20
+
+# Placeholders for dynamic values
+num_actions: -1
+is_state_vector: False

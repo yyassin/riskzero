@@ -1,0 +1,37 @@
+seeds: [159, 1606, 2186, 3462, 8175]
+seed: -1
+env_name: "grid-risk"
+max_num_steps: 24
+max_num_iters: 1000
+eval_interval: 5
+eval_num_actors: 1024
+selfplay_batch_size: 32
+num_quantile_samples: 4096
+
+huber_param: 1.0
+buffer_batch_size: 1024
+buffer_size: 76_800 # 32 * 24 * 100 ; 100 sets of 24 steps each
+epsilon_start: 1.0
+epsilon_finish: 0.05
+epsilon_anneal_time: 500
+learning_start: 100  # Iters of max_num_steps to prefill the buffer
+n_step: 5
+
+num_quantiles: 64
+alpha_cvar: 1.0 # CVaR level
+history_length: 10
+
+gamma: 1.0
+lr: 0.0001
+min_lr: 0.00001
+optim_eps: 0.00001
+lr_linear_decay: True
+lr_anneal_iterations: 1000
+max_grad_norm: 5.0
+target_tau: 1.0
+target_update_interval: 25
+train_epochs_per_iter: 50
+
+# Placeholders for dynamic values
+num_actions: -1
+is_state_vector: False
